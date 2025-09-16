@@ -12,6 +12,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 @Slf4j
@@ -70,7 +72,7 @@ public class MongoConfig {
             admin.setEmail("admin@securelogin.com");
             admin.setPassword(passwordEncoder.encode("admin123"));
             admin.setFullName("Administrador do Sistema");
-            admin.setRoles(Set.of("ADMIN", "USER"));
+            admin.setRoles(new HashSet<>(Arrays.asList("ADMIN", "USER")));
             admin.setActive(true);
             admin.setAccountNonExpired(true);
             admin.setAccountNonLocked(true);
@@ -108,8 +110,12 @@ public class MongoConfig {
                 role.setName(roleName);
                 role.setDescription(roleDescriptions[i]);
                 
-                mongoTemplate.save(role, "roles");
-                log.info("Role '{}' criada com sucesso", roleName);
+                try {
+                    mongoTemplate.save(role, "roles");
+                    log.info("Role '{}' criada com sucesso", roleName);
+                } catch (Exception e) {
+                    log.warn("Role '{}' já existe ou erro ao criar: {}", roleName, e.getMessage());
+                }
             }
         }
     }

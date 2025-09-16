@@ -19,9 +19,6 @@ public class Role {
     
     private String description;
     
-    /**
-     * Construtor simplificado para criação de roles
-     */
     public Role(String name, String description) {
         this.name = name;
         this.description = description;

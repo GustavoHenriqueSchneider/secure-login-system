@@ -1,0 +1,12 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/integration-test-db
+      database: secure-login-test
+      auto-index-creation: true
+
+logging:
+  level:
+    com.securelogin: DEBUG
+    org.springframework.data.mongodb: DEBUG
+

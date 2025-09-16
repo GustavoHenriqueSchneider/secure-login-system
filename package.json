@@ -1,0 +1,26 @@
+{
+  "name": "secure-login-system-frontend-tests",
+  "version": "1.0.0",
+  "description": "Frontend tests for Secure Login System",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "@testing-library/jest-dom": "^6.1.4",
+    "@testing-library/dom": "^9.3.3"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": ["<rootDir>/src/test/js/setup.js"],
+    "testMatch": ["<rootDir>/src/test/js/**/*.test.js"],
+    "collectCoverageFrom": [
+      "src/main/resources/static/js/**/*.js",
+      "!src/main/resources/static/js/**/*.min.js"
+    ]
+  }
+}
+

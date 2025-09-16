@@ -12,14 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
-/**
- * Serviço para gerenciamento de usuários
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -52,7 +49,7 @@ public class UserService implements UserDetailsService {
         }
         
         if (user.getRoles() == null || user.getRoles().isEmpty()) {
-            user.setRoles(Set.of("USER"));
+            user.setRoles(new HashSet<>(Arrays.asList("USER")));
         }
         
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -62,9 +59,6 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
     
-    /**
-     * Atualiza um usuário existente
-     */
     @Transactional
     public User updateUser(String id, User userDetails) {
         log.info("Atualizando usuário: {}", id);
@@ -72,7 +66,6 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado: " + id));
         
-        // Atualiza campos permitidos
         if (userDetails.getFullName() != null) {
             user.setFullName(userDetails.getFullName());
         }
@@ -100,37 +93,22 @@ public class UserService implements UserDetailsService {
         return updatedUser;
     }
     
-    /**
-     * Busca usuário por ID
-     */
     public Optional<User> findById(String id) {
         return userRepository.findById(id);
     }
     
-    /**
-     * Busca usuário por nome de usuário
-     */
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
     
-    /**
-     * Lista todos os usuários
-     */
     public List<User> findAllUsers() {
         return userRepository.findAll();
     }
     
-    /**
-     * Lista usuários ativos
-     */
     public List<User> findActiveUsers() {
         return userRepository.findByIsActiveTrue();
     }
     
-    /**
-     * Desativa um usuário
-     */
     @Transactional
     public void deactivateUser(String id) {
         log.info("Desativando usuário: {}", id);
@@ -145,9 +123,6 @@ public class UserService implements UserDetailsService {
         log.info("Usuário desativado com sucesso: {}", user.getUsername());
     }
     
-    /**
-     * Ativa um usuário
-     */
     @Transactional
     public void activateUser(String id) {
         log.info("Ativando usuário: {}", id);
@@ -162,11 +137,6 @@ public class UserService implements UserDetailsService {
         log.info("Usuário ativado com sucesso: {}", user.getUsername());
     }
     
-    // Métodos de auditoria removidos para simplificar o projeto
-    
-    /**
-     * Desbloqueia conta de usuário
-     */
     @Transactional
     public void unlockUser(String id) {
         log.info("Desbloqueando usuário: {}", id);
@@ -180,18 +150,12 @@ public class UserService implements UserDetailsService {
         log.info("Usuário desbloqueado com sucesso: {}", user.getUsername());
     }
     
-    /**
-     * Verifica se usuário tem role específica
-     */
     public boolean hasRole(String username, String role) {
         return userRepository.findByUsername(username)
                 .map(user -> user.getRoles().contains(role))
                 .orElse(false);
     }
     
-    /**
-     * Cria usuário administrador padrão se não existir
-     */
     @Transactional
     public void createDefaultAdminIfNotExists() {
         if (!userRepository.existsByUsername("admin")) {
@@ -200,9 +164,8 @@ public class UserService implements UserDetailsService {
             User admin = new User();
             admin.setUsername("admin");
             admin.setEmail("admin@securelogin.com");
-            admin.setPassword("admin123"); // Será criptografada
             admin.setFullName("Administrador do Sistema");
-            admin.setRoles(Set.of("ADMIN", "USER"));
+            admin.setRoles(new HashSet<>(Arrays.asList("ADMIN", "USER")));
             
             createUser(admin);
             log.info("Usuário administrador criado com sucesso");

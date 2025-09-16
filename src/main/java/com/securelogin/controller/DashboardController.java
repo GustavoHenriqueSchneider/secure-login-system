@@ -22,23 +22,17 @@ public class DashboardController {
     private final UserService userService;
     private final LoginAttemptService loginAttemptService;
     
-    /**
-     * Exibe o dashboard principal
-     */
     @GetMapping
     public String dashboard(Model model, Authentication authentication) {
         String username = authentication.getName();
         log.debug("Acessando dashboard para usuário: {}", username);
         
-        // Busca informações do usuário
         User user = userService.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         
-        // Busca tentativas de login recentes
         List<com.securelogin.entity.LoginAttempt> recentLogins = 
                 loginAttemptService.getSuccessfulLoginAttemptsByUsername(username);
         
-        // Gera relatório de segurança
         LoginAttemptService.SecurityReport securityReport = loginAttemptService.generateSecurityReport();
         
         model.addAttribute("user", user);
@@ -48,9 +42,6 @@ public class DashboardController {
         return "dashboard/index";
     }
     
-    /**
-     * Exibe perfil do usuário
-     */
     @GetMapping("/profile")
     public String profile(Model model, Authentication authentication) {
         String username = authentication.getName();

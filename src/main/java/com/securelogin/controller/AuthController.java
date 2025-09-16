@@ -16,11 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Set;
+import java.util.Arrays;
+import java.util.HashSet;
 
-/**
- * Controlador para operações de autenticação
- */
 @Slf4j
 @Controller
 @RequestMapping
@@ -52,12 +50,8 @@ public class AuthController {
         return "auth/login";
     }
     
-    /**
-     * Exibe a página de cadastro
-     */
     @GetMapping("/register")
     public String registerPage(Model model) {
-        // Verifica se o usuário já está autenticado
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && !auth.getName().equals("anonymousUser")) {
             return "redirect:/dashboard";
@@ -67,36 +61,28 @@ public class AuthController {
         return "auth/register";
     }
     
-    /**
-     * Processa o cadastro de novo usuário
-     */
     @PostMapping("/register")
     public String registerUser(@Valid UserRegistrationDto userRegistrationDto, 
                               BindingResult bindingResult, 
                               RedirectAttributes redirectAttributes) {
         
-        log.info("Tentativa de cadastro para usuário: {}", userRegistrationDto.getUsername());
-        
-        // Validação de dados
         if (bindingResult.hasErrors()) {
             log.warn("Erro de validação no cadastro: {}", bindingResult.getAllErrors());
             return "auth/register";
         }
         
-        // Verifica se as senhas coincidem
         if (!userRegistrationDto.getPassword().equals(userRegistrationDto.getConfirmPassword())) {
             bindingResult.rejectValue("confirmPassword", "error.userRegistrationDto", "As senhas não coincidem");
             return "auth/register";
         }
         
         try {
-            // Cria o usuário
             User user = new User();
             user.setUsername(userRegistrationDto.getUsername());
             user.setEmail(userRegistrationDto.getEmail());
             user.setPassword(userRegistrationDto.getPassword());
             user.setFullName(userRegistrationDto.getFullName());
-            user.setRoles(Set.of("USER")); // Role padrão para novos usuários
+            user.setRoles(new HashSet<>(Arrays.asList("USER")));
             
             User savedUser = userService.createUser(user);
             
@@ -118,9 +104,6 @@ public class AuthController {
         }
     }
     
-    /**
-     * Exibe página de acesso negado
-     */
     @GetMapping("/access-denied")
     public String accessDeniedPage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -130,20 +113,26 @@ public class AuthController {
         return "error/access-denied";
     }
     
-    /**
-     * Converte códigos de erro em mensagens amigáveis
-     */
     private String getErrorMessage(String error) {
-        return switch (error) {
-            case "invalid_credentials" -> "Nome de usuário ou senha inválidos.";
-            case "user_not_found" -> "Usuário não encontrado.";
-            case "account_expired" -> "Sua conta expirou. Entre em contato com o administrador.";
-            case "account_locked" -> "Sua conta está bloqueada. Tente novamente mais tarde.";
-            case "account_disabled" -> "Sua conta está desabilitada. Entre em contato com o administrador.";
-            case "credentials_expired" -> "Suas credenciais expiraram. Altere sua senha.";
-            case "unauthorized" -> "Você precisa fazer login para acessar esta página.";
-            case "authentication_error" -> "Erro de autenticação. Tente novamente.";
-            default -> "Erro de login. Tente novamente.";
-        };
+        switch (error) {
+            case "invalid_credentials":
+                return "Nome de usuário ou senha inválidos.";
+            case "user_not_found":
+                return "Usuário não encontrado.";
+            case "account_expired":
+                return "Sua conta expirou. Entre em contato com o administrador.";
+            case "account_locked":
+                return "Sua conta está bloqueada. Tente novamente mais tarde.";
+            case "account_disabled":
+                return "Sua conta está desabilitada. Entre em contato com o administrador.";
+            case "credentials_expired":
+                return "Suas credenciais expiraram. Altere sua senha.";
+            case "unauthorized":
+                return "Você precisa fazer login para acessar esta página.";
+            case "authentication_error":
+                return "Erro de autenticação. Tente novamente.";
+            default:
+                return "Erro de login. Tente novamente.";
+        }
     }
 }

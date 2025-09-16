@@ -1,8 +1,6 @@
-// Aguarda o carregamento completo da página
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Sistema de Login Seguro carregado');
     
-    // Inicializa funcionalidades
     initializePasswordToggle();
     initializeFormValidation();
     initializeTooltips();
@@ -10,9 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeDashboardCards();
 });
 
-/**
- * Inicializa o toggle de visibilidade de senha
- */
 function initializePasswordToggle() {
     const toggleButtons = document.querySelectorAll('[id^="togglePassword"], [id^="toggleConfirmPassword"]');
     
@@ -35,9 +30,6 @@ function initializePasswordToggle() {
     });
 }
 
-/**
- * Inicializa validação de formulários
- */
 function initializeFormValidation() {
     const forms = document.querySelectorAll('.needs-validation');
     
@@ -51,7 +43,6 @@ function initializeFormValidation() {
         });
     });
     
-    // Validação em tempo real para confirmação de senha
     const passwordField = document.getElementById('password');
     const confirmPasswordField = document.getElementById('confirmPassword');
     
@@ -66,9 +57,6 @@ function initializeFormValidation() {
     }
 }
 
-/**
- * Inicializa tooltips do Bootstrap
- */
 function initializeTooltips() {
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.map(function(tooltipTriggerEl) {
@@ -76,14 +64,10 @@ function initializeTooltips() {
     });
 }
 
-/**
- * Inicializa alertas com auto-dismiss
- */
 function initializeAlerts() {
     const alerts = document.querySelectorAll('.alert:not(.alert-permanent)');
     
     alerts.forEach(alert => {
-        // Auto-dismiss após 5 segundos
         setTimeout(() => {
             if (alert && alert.parentNode) {
                 const bsAlert = new bootstrap.Alert(alert);
@@ -93,9 +77,6 @@ function initializeAlerts() {
     });
 }
 
-/**
- * Inicializa cards do dashboard com efeitos hover
- */
 function initializeDashboardCards() {
     const dashboardCards = document.querySelectorAll('.dashboard-card');
     
@@ -112,9 +93,6 @@ function initializeDashboardCards() {
     });
 }
 
-/**
- * Valida força da senha
- */
 function validatePasswordStrength(password) {
     let strength = 0;
     let feedback = [];
@@ -137,9 +115,6 @@ function validatePasswordStrength(password) {
     return { strength, feedback };
 }
 
-/**
- * Atualiza indicador de força da senha
- */
 function updatePasswordStrengthIndicator(password) {
     const strengthBar = document.getElementById('passwordStrength');
     const strengthText = document.getElementById('passwordStrengthText');
@@ -153,9 +128,6 @@ function updatePasswordStrengthIndicator(password) {
     }
 }
 
-/**
- * Formata data para exibição
- */
 function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleDateString('pt-BR', {
@@ -167,9 +139,6 @@ function formatDate(dateString) {
     });
 }
 
-/**
- * Mostra loading em botões
- */
 function showButtonLoading(button, text = 'Carregando...') {
     const originalText = button.innerHTML;
     button.innerHTML = `
@@ -184,18 +153,12 @@ function showButtonLoading(button, text = 'Carregando...') {
     };
 }
 
-/**
- * Confirma ação antes de executar
- */
 function confirmAction(message, callback) {
     if (confirm(message)) {
         callback();
     }
 }
 
-/**
- * Mostra notificação toast
- */
 function showToast(message, type = 'info') {
     const toastContainer = document.getElementById('toast-container') || createToastContainer();
     
@@ -217,15 +180,11 @@ function showToast(message, type = 'info') {
     const toast = new bootstrap.Toast(toastElement);
     toast.show();
     
-    // Remove o toast do DOM após ser escondido
     toastElement.addEventListener('hidden.bs.toast', function() {
         this.remove();
     });
 }
 
-/**
- * Cria container para toasts se não existir
- */
 function createToastContainer() {
     const container = document.createElement('div');
     container.id = 'toast-container';
@@ -235,17 +194,11 @@ function createToastContainer() {
     return container;
 }
 
-/**
- * Valida email
- */
 function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
 
-/**
- * Valida força da senha em tempo real
- */
 document.addEventListener('DOMContentLoaded', function() {
     const passwordField = document.getElementById('password');
     if (passwordField) {
@@ -255,13 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-/**
- * Utilitários para manipulação de DOM
- */
 const DOMUtils = {
-    /**
-     * Cria elemento com classes e atributos
-     */
     createElement: function(tag, classes = [], attributes = {}, content = '') {
         const element = document.createElement(tag);
         element.className = classes.join(' ');
@@ -274,30 +221,18 @@ const DOMUtils = {
         return element;
     },
     
-    /**
-     * Adiciona classe com animação
-     */
     addClassWithAnimation: function(element, className) {
         element.classList.add(className);
         element.style.transition = 'all 0.3s ease';
     },
     
-    /**
-     * Remove classe com animação
-     */
     removeClassWithAnimation: function(element, className) {
         element.style.transition = 'all 0.3s ease';
         element.classList.remove(className);
     }
 };
 
-/**
- * Utilitários para validação
- */
 const ValidationUtils = {
-    /**
-     * Valida formulário completo
-     */
     validateForm: function(form) {
         const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
         let isValid = true;
@@ -315,9 +250,6 @@ const ValidationUtils = {
         return isValid;
     },
     
-    /**
-     * Limpa validações do formulário
-     */
     clearValidation: function(form) {
         const inputs = form.querySelectorAll('.is-valid, .is-invalid');
         inputs.forEach(input => {
@@ -326,7 +258,6 @@ const ValidationUtils = {
     }
 };
 
-// Exporta funções para uso global
 window.SecureLogin = {
     showToast,
     confirmAction,

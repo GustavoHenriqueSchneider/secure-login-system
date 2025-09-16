@@ -4,9 +4,9 @@ spring:
   
   data:
     mongodb:
-      uri: mongodb://localhost:27017/secure-login
+      uri: mongodb://localhost:27017/test-db
       database: secure-login
-      auto-index-creation: false
+      auto-index-creation: true
   
   thymeleaf:
     prefix: classpath:/templates/
@@ -58,3 +58,4 @@ app:
   mongodb:
     connection-timeout: 10000
     socket-timeout: 10000
+
