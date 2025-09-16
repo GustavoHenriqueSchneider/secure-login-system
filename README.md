@@ -16,8 +16,6 @@ Sistema de autenticação básico desenvolvido com **Spring Boot**, **Thymeleaf*
 - [API Endpoints](#-api-endpoints)
 - [Personalização](#-personalização)
 - [Troubleshooting](#-troubleshooting)
-- [Contribuição](#-contribuição)
-- [Licença](#-licença)
 
 ## ✨ Características
 
