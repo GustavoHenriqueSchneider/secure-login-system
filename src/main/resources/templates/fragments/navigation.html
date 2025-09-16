@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <!-- Navigation Fragment -->
+    <div th:fragment="navigation">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" th:href="@{/}">
+                    <i class="bi bi-shield-lock"></i>
+                    Sistema de Login Seguro
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <!-- Links para usuários autenticados -->
+                        <li class="nav-item" th:if="${#authentication.isAuthenticated()}">
+                            <a class="nav-link" th:href="@{/dashboard}">
+                                <i class="bi bi-house"></i> Dashboard
+                            </a>
+                        </li>
+                        
+                        <!-- Links administrativos -->
+                        <li class="nav-item dropdown" th:if="${#authentication.isAuthenticated() and #authorization.expression('hasRole(''ADMIN'')')}">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-gear"></i> Administração
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" th:href="@{/admin/dashboard}">
+                                    <i class="bi bi-speedometer2"></i> Dashboard Admin
+                                </a></li>
+                                <li><a class="dropdown-item" th:href="@{/admin/users}">
+                                    <i class="bi bi-people"></i> Usuários
+                                </a></li>
+                                <li><a class="dropdown-item" th:href="@{/admin/security}">
+                                    <i class="bi bi-shield-check"></i> Segurança
+                                </a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <ul class="navbar-nav">
+                        <!-- Links para usuários não autenticados -->
+                        <li class="nav-item" th:if="${!#authentication.isAuthenticated()}">
+                            <a class="nav-link" th:href="@{/login}">
+                                <i class="bi bi-box-arrow-in-right"></i> Login
+                            </a>
+                        </li>
+                        <li class="nav-item" th:if="${!#authentication.isAuthenticated()}">
+                            <a class="nav-link" th:href="@{/register}">
+                                <i class="bi bi-person-plus"></i> Cadastro
+                            </a>
+                        </li>
+                        
+                        <!-- Menu do usuário autenticado -->
+                        <li class="nav-item dropdown" th:if="${#authentication.isAuthenticated()}">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-person-circle"></i>
+                                <span th:text="${#authentication.name}">Usuário</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" th:href="@{/dashboard/profile}">
+                                    <i class="bi bi-person"></i> Perfil
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form th:action="@{/logout}" method="post" class="d-inline">
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="bi bi-box-arrow-right"></i> Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</body>
+</html>

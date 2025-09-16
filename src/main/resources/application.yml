@@ -1,0 +1,68 @@
+# Configuração da aplicação Spring Boot
+spring:
+  application:
+    name: secure-login-system
+  
+  # Configuração do MongoDB Atlas
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb+srv://username:password@cluster.mongodb.net/secure-login?retryWrites=true&w=majority}
+      database: secure-login
+      auto-index-creation: true
+  
+  # Configuração do Thymeleaf
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    cache: false
+    encoding: UTF-8
+  
+  # Configuração de segurança
+  security:
+    user:
+      name: admin
+      password: admin123
+      roles: ADMIN
+  
+  # Configuração de sessão
+  session:
+    store-type: none
+    timeout: 30m
+    cookie:
+      secure: false
+      http-only: true
+      same-site: lax
+
+# Configuração do servidor
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    session:
+      timeout: 30m
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# Configuração de logging
+logging:
+  level:
+    com.securelogin: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.data.mongodb: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/secure-login-system.log
+
+# Configurações personalizadas
+app:
+  security:
+    max-login-attempts: 5
+    lock-time-minutes: 30
+    session-timeout-minutes: 30
+  mongodb:
+    connection-timeout: 10000
+    socket-timeout: 10000

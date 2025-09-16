@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Dashboard - Sistema de Login Seguro</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container-fluid py-4">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="h3 mb-0">
+                                <i class="bi bi-speedometer2 text-primary"></i>
+                                Dashboard
+                            </h1>
+                            <p class="text-muted mb-0">Bem-vindo, <span th:text="${user.fullName}">Usuário</span>!</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted">
+                                Último login: 
+                                <span th:text="${#dates.format(user.lastLogin, 'dd/MM/yyyy HH:mm')}">-</span>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cards de Informações -->
+            <div class="row mb-4">
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4 class="card-title">
+                                        <i class="bi bi-person-circle"></i>
+                                        Perfil
+                                    </h4>
+                                    <p class="card-text">Gerencie suas informações</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi bi-person-circle" style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                            <a th:href="@{/dashboard/profile}" class="btn btn-light btn-sm">
+                                <i class="bi bi-arrow-right"></i> Acessar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4 class="card-title">
+                                        <i class="bi bi-shield-check"></i>
+                                        Segurança
+                                    </h4>
+                                    <p class="card-text">Conta ativa e segura</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi bi-shield-check" style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                            <span class="badge bg-light text-success">
+                                <i class="bi bi-check-circle"></i> Ativa
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4 class="card-title">
+                                        <i class="bi bi-clock-history"></i>
+                                        Atividade
+                                    </h4>
+                                    <p class="card-text">Últimas atividades</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi bi-clock-history" style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                            <small>Ver histórico de login</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4 class="card-title">
+                                        <i class="bi bi-gear"></i>
+                                        Configurações
+                                    </h4>
+                                    <p class="card-text">Personalize sua conta</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi bi-gear" style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                            <small>Em breve</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Informações do Usuário -->
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-person-badge"></i>
+                                Informações da Conta
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Nome de usuário:</strong> <span th:text="${user.username}">-</span></p>
+                                    <p><strong>Email:</strong> <span th:text="${user.email}">-</span></p>
+                                    <p><strong>Nome completo:</strong> <span th:text="${user.fullName}">-</span></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Status:</strong> 
+                                        <span th:if="${user.active}" class="badge bg-success">Ativo</span>
+                                        <span th:unless="${user.active}" class="badge bg-danger">Inativo</span>
+                                    </p>
+                                    <p><strong>Roles:</strong> 
+                                        <span th:each="role, iterStat : ${user.roles}" 
+                                              class="badge bg-primary me-1">
+                                            <span th:text="${role}">-</span>
+                                        </span>
+                                    </p>
+                                    <p><strong>Membro desde:</strong> 
+                                        <span th:text="${#dates.format(user.createdAt, 'dd/MM/yyyy')}">-</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-shield-lock"></i>
+                                Segurança
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <small class="text-muted">Tentativas de login</small>
+                                <div class="progress mt-1" style="height: 8px;">
+                                    <div class="progress-bar bg-success" 
+                                         th:style="'width: ' + ${user.loginAttempts == 0 ? 100 : (5 - user.loginAttempts) * 20} + '%'">
+                                    </div>
+                                </div>
+                                <small class="text-muted">
+                                    <span th:text="${5 - user.loginAttempts}">5</span> tentativas restantes
+                                </small>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <small class="text-muted">Status da conta</small>
+                                <div class="mt-1">
+                                    <span th:if="${user.isAccountNonLocked()}" class="badge bg-success">
+                                        <i class="bi bi-unlock"></i> Desbloqueada
+                                    </span>
+                                    <span th:unless="${user.isAccountNonLocked()}" class="badge bg-danger">
+                                        <i class="bi bi-lock"></i> Bloqueada
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center">
+                                <a th:href="@{/dashboard/profile}" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-pencil"></i> Editar Perfil
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Seção simplificada -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-info-circle"></i>
+                                Informações do Sistema
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted">Sistema de Login Seguro desenvolvido com Spring Boot e MongoDB.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

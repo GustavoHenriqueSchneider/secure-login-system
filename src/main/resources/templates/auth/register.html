@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Cadastro - Sistema de Login Seguro</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container-fluid vh-100 d-flex justify-content-center align-items-center bg-light">
+            <div class="row w-100 justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-body p-5">
+                            <!-- Logo e Título -->
+                            <div class="text-center mb-4">
+                                <i class="bi bi-person-plus text-primary" style="font-size: 3rem;"></i>
+                                <h2 class="mt-3 mb-1">Criar Conta</h2>
+                                <p class="text-muted">Preencha os dados para se cadastrar</p>
+                            </div>
+                            
+                            <!-- Mensagens de Erro/Sucesso -->
+                            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="bi bi-exclamation-triangle"></i>
+                                <span th:text="${errorMessage}"></span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                            
+                            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                                <i class="bi bi-check-circle"></i>
+                                <span th:text="${successMessage}"></span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                            
+                            <!-- Formulário de Cadastro -->
+                            <form th:action="@{/register}" 
+                                  th:object="${userRegistrationDto}" 
+                                  method="post" 
+                                  class="needs-validation" 
+                                  novalidate>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="username" class="form-label">
+                                            <i class="bi bi-person"></i> Nome de usuário *
+                                        </label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="username" 
+                                               th:field="*{username}"
+                                               placeholder="Digite seu nome de usuário"
+                                               required>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">
+                                            Nome de usuário inválido
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="email" class="form-label">
+                                            <i class="bi bi-envelope"></i> Email *
+                                        </label>
+                                        <input type="email" 
+                                               class="form-control" 
+                                               id="email" 
+                                               th:field="*{email}"
+                                               placeholder="Digite seu email"
+                                               required>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+                                            Email inválido
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="fullName" class="form-label">
+                                        <i class="bi bi-person-badge"></i> Nome completo *
+                                    </label>
+                                    <input type="text" 
+                                           class="form-control" 
+                                           id="fullName" 
+                                           th:field="*{fullName}"
+                                           placeholder="Digite seu nome completo"
+                                           required>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}">
+                                        Nome completo inválido
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="password" class="form-label">
+                                            <i class="bi bi-lock"></i> Senha *
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="password" 
+                                                   class="form-control" 
+                                                   id="password" 
+                                                   th:field="*{password}"
+                                                   placeholder="Digite sua senha"
+                                                   required>
+                                            <button class="btn btn-outline-secondary" 
+                                                    type="button" 
+                                                    id="togglePassword">
+                                                <i class="bi bi-eye" id="toggleIcon"></i>
+                                            </button>
+                                        </div>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
+                                            Senha inválida
+                                        </div>
+                                        <div class="form-text">
+                                            Mínimo de 6 caracteres
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="confirmPassword" class="form-label">
+                                            <i class="bi bi-lock-fill"></i> Confirmar senha *
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="password" 
+                                                   class="form-control" 
+                                                   id="confirmPassword" 
+                                                   th:field="*{confirmPassword}"
+                                                   placeholder="Confirme sua senha"
+                                                   required>
+                                            <button class="btn btn-outline-secondary" 
+                                                    type="button" 
+                                                    id="toggleConfirmPassword">
+                                                <i class="bi bi-eye" id="toggleConfirmIcon"></i>
+                                            </button>
+                                        </div>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}">
+                                            Confirmação de senha inválida
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Indicador de força da senha -->
+                                <div class="mb-3">
+                                    <div class="progress" style="height: 5px;">
+                                        <div class="progress-bar" id="passwordStrength" role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                    <small class="text-muted" id="passwordStrengthText">Digite uma senha</small>
+                                </div>
+                                
+                                <!-- Termos e condições -->
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="acceptTerms" required>
+                                    <label class="form-check-label" for="acceptTerms">
+                                        Eu aceito os <a href="#" class="text-decoration-none">termos e condições</a> *
+                                    </label>
+                                    <div class="invalid-feedback">
+                                        Você deve aceitar os termos e condições.
+                                    </div>
+                                </div>
+                                
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="bi bi-person-plus"></i>
+                                        Criar Conta
+                                    </button>
+                                </div>
+                            </form>
+                            
+                            <!-- Links Adicionais -->
+                            <div class="text-center mt-4">
+                                <p class="mb-0">
+                                    Já tem uma conta? 
+                                    <a th:href="@{/login}" class="text-decoration-none">
+                                        Faça login aqui
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Informações de Segurança -->
+                    <div class="text-center mt-3">
+                        <small class="text-muted">
+                            <i class="bi bi-shield-check"></i>
+                            Seus dados estão seguros e criptografados
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts para validação e funcionalidades -->
+    <script>
+        // Validação do formulário
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+        
+        // Toggle de visibilidade da senha
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const password = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (password.type === 'password') {
+                password.type = 'text';
+                toggleIcon.className = 'bi bi-eye-slash';
+            } else {
+                password.type = 'password';
+                toggleIcon.className = 'bi bi-eye';
+            }
+        });
+        
+        // Toggle de visibilidade da confirmação de senha
+        document.getElementById('toggleConfirmPassword').addEventListener('click', function() {
+            const confirmPassword = document.getElementById('confirmPassword');
+            const toggleIcon = document.getElementById('toggleConfirmIcon');
+            
+            if (confirmPassword.type === 'password') {
+                confirmPassword.type = 'text';
+                toggleIcon.className = 'bi bi-eye-slash';
+            } else {
+                confirmPassword.type = 'password';
+                toggleIcon.className = 'bi bi-eye';
+            }
+        });
+        
+        // Validação de força da senha
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const strengthBar = document.getElementById('passwordStrength');
+            const strengthText = document.getElementById('passwordStrengthText');
+            
+            let strength = 0;
+            let strengthLabel = '';
+            
+            if (password.length >= 6) strength += 20;
+            if (password.length >= 8) strength += 20;
+            if (/[a-z]/.test(password)) strength += 20;
+            if (/[A-Z]/.test(password)) strength += 20;
+            if (/[0-9]/.test(password)) strength += 10;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 10;
+            
+            strengthBar.style.width = strength + '%';
+            
+            if (strength < 40) {
+                strengthBar.className = 'progress-bar bg-danger';
+                strengthLabel = 'Senha fraca';
+            } else if (strength < 70) {
+                strengthBar.className = 'progress-bar bg-warning';
+                strengthLabel = 'Senha média';
+            } else {
+                strengthBar.className = 'progress-bar bg-success';
+                strengthLabel = 'Senha forte';
+            }
+            
+            strengthText.textContent = strengthLabel;
+        });
+        
+        // Validação de confirmação de senha
+        document.getElementById('confirmPassword').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = this.value;
+            
+            if (confirmPassword !== password) {
+                this.setCustomValidity('As senhas não coincidem');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    </script>
+</body>
+</html>
